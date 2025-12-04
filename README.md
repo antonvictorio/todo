@@ -1,7 +1,7 @@
 # TODO API
 
 **Local Environment Setup**
-```
+```elixir
 mix deps.get;
 mix ecto.setup;
 mix phx.server;
