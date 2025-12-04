@@ -19,6 +19,15 @@ SELECT
 FROM generate_series(1, 1000000) AS gs;
 ```
 
+**Testing of list tasks API with 1m rows**
+- tested on a local environment using a Macbook Air M1 (8gb RAM) via Postman collections
+    - user has 1m tasks
+    - iterations: 20
+    - average response time: 3847ms
+
+<img src="https://github.com/antonvictorio/todo/blob/master/TEST_20.png" width="1024px">
+
+
 ### Public Routes
 ---
 **Create User**
