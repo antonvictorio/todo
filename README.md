@@ -1,20 +1,35 @@
 # TODO API
 
-Local Environment Setup
+**Local Environment Setup**
 ```
-mix deps.get
-mix ecto.setup
-mix phx.server
+mix deps.get;
+mix ecto.setup;
+mix phx.server;
+```
+
+**Sample PostgreSQL script to seed 1 millions tasks**
+```sql
+INSERT INTO tasks (description, position, user_id, inserted_at, updated_at)
+SELECT
+  'task ' || gs,
+  gs * 1.0,
+  1,
+  NOW(),
+  NOW()
+FROM generate_series(1, 1000000) AS gs;
 ```
 
 ### Public Routes
 ---
 **Create User**
 
-- **POST** `http://localhost:4000/api/users`
+- **POST**
+```
+http://localhost:4000/api/users
+```
 
 request body
-```
+```json
 {
     "username": "test_todo",
     "password": "Password123"
@@ -22,7 +37,7 @@ request body
 ```
 
 response body
-```
+```json
 {
     "message": "User successfully created!"
 }
@@ -32,10 +47,13 @@ response body
 
 **Sign In**
 
-- **POST** `http://localhost:4000/api/users/sign_in`
+- **POST**
+```
+http://localhost:4000/api/users/sign_in
+```
 
 request body
-```
+```json
 {
     "username": "test_todo",
     "password": "Password123"
@@ -43,7 +61,7 @@ request body
 ```
 
 response body
-```
+```json
 {
    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e..."
 }
@@ -52,22 +70,24 @@ response body
 
 ### Authenticated Routes
 - All endpoints requires an auth token that will be fetched from the Sign In API:
-    - **Authorization: Bearer {JWT_TOKEN}**
+    - **Authorization: Bearer *{JWT_TOKEN}***
 
 **Create Task**
 
-- **POST** `http://localhost:4000/api/tasks`
+- **POST**
+```
+http://localhost:4000/api/tasks
+```
 
 request body
-```
+```json
 {
-    "username": "test_todo",
-    "password": "Password123"
+    "description": "test update task"
 }
 ```
 
 response body
-```
+```json
 {
    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e..."
 }
@@ -77,23 +97,22 @@ response body
 
 **Update Task**
 
-- **PUT** `http://localhost:4000/api/tasks/:task_id`
-
-- *task_id is required*
+- **PUT** (*task_id is required*)
+```
+http://localhost:4000/api/tasks/:task_id
+```
 
 request body
-```
+```json
 {
     "description": "test update task"
 }
 ```
 
 response body
-```
+```json
 {
-    "description": "test update task",
-    "position": 1,
-    "user_id": 1
+    "message": "Successfully updated task ID: 1"
 }
 ```
 
@@ -101,14 +120,17 @@ response body
 
 **Get a Task**
 
-- **GET** `http://localhost:4000/api/tasks/:task_id`
-- *task_id is required*
+- **GET** (*task_id is required*)
+
+```text
+http://localhost:4000/api/tasks/:task_id
+```
 
 response body
-```
+```json
 {
     "description": "test description",
-    "position": 1,
+    "position": 1.0,
     "user_id": 1
 }
 ```
@@ -117,23 +139,29 @@ response body
 
 **List Tasks**
 
-- **GET** `http://localhost:4000/api/tasks`
+- **GET**
+```
+http://localhost:4000/api/tasks
+```
 
 response body
-```
+```json
 {
     "tasks": [
         {
+            "id": 1,
             "description": "task 1",
-            "position": 1
+            "position": 1.0
         },
         {
+            "id": 2,
             "description": "task 2",
-            "position": 2
+            "position": 2.0
         },
         {
+            "id": 3,
             "description": "task 3",
-            "position": 3
+            "position": 3.0
         }
     ]
 }
@@ -143,12 +171,38 @@ response body
 
 **Delete Task**
 
-- **DELETE** `http://localhost:4000/api/tasks/:task_id`
-- *task_id is required*
+- **DELETE** (*task_id is required*)
+```text
+http://localhost:4000/api/tasks/:task_id
+```
 
 response body
-```
+```json
 {
     "message": "Successfully deleted task ID: 1"
+}
+```
+
+---
+
+**Reposition Task**
+
+- **PUT** (*task_id is required*)
+```
+http://localhost:4000/api/tasks/:task_id/reposition
+```
+
+request body
+```json
+{
+    "previous_task": 1.0,
+    "next_task": 2.0
+}
+```
+
+response body
+```json
+{
+    "message": "Successfully repositioned task ID: 3"
 }
 ```
